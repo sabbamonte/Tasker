@@ -1,0 +1,41 @@
+{% extends "Tasker/layout.html" %}
+{% load static %}
+
+{% block body %}
+<div class="body">
+    <head>
+        <h2> My Archive </h2>
+        <hr>
+        <h3> Look at all those tasks you've completed. Good on you!</h3>
+    </head>
+    <br>
+    <div class="task-view shadow p-3 mb-5 bg-white rounded">
+        
+        <h3> Completed Tasks </h3>
+        <ul>
+            {% for archive in archived %}
+                <li class="task-items" id="{{archive.id}}"><input class="delete btn btn-dark" id="{{archive.id}}" type="submit" value="X" name="delete_task"/> {{archive.task}} <p id="time">Deadline: {{archive.deadline}}</p></li>
+            {% endfor %}
+        </ul>
+        {% if not message %}
+        <form method="POST">
+            <button class="btn btn-dark delete_all">Clear All</button>
+        </form>
+        {% else %}
+        {{message}}
+        {% endif %}
+        
+        
+        
+
+        <div class="task">
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static 'Tasker/script.js' %}"></script>
+{% endblock %}

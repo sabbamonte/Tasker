@@ -1,0 +1,74 @@
+{% extends "Tasker/layout.html" %}
+{% load static %}
+
+{% block body %}
+<div class="body">
+    <head>
+        <h2> {{subject.subject}} </h2>
+    </head>
+    {% if message %}
+    {{message}}
+    {% endif %}
+    <hr>
+    <h3 class="links">Links</h3>
+    
+    <ul class="link-view list-group">
+        {% for link in links %}
+            {% if not link.name %}
+                <a class="urls list-group-item list-group-item-action rounded-pill" id="url-{{link.id}}"href="https://{{link.links}}">{{link.links}}</a>
+            {% else %}
+                <a class="urls list-group-item list-group-item-action rounded-pill" id="url-{{link.id}}" href="https://{{link.links}}">{{link.name}}</a>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    <div class="form-group" id="link-view">
+        <label for="delete_link">Delete or Add a link</label>
+        <select autofocus class="form-control" id="delete_link" name="{{subject.subject}}">
+            <option default="true">None</option>
+            {% for link in links %}
+                {% if not link.name %}
+                    <option class="{{link.subject}}" id="{{link.id}}"> {{link.links}} </option>
+                {% else %}
+                    <option class="{{link.subject}}" id="{{link.id}}"> {{link.name}} </option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        {% if not links %}
+        {% else %}
+        <button class="link btn btn-dark"> Delete Link </button>
+        {% endif %}
+    </div>
+    <br>
+    <div id="add_link-view">
+
+    </div>
+    
+    <div class="note-view">
+            
+        <h3> Notes </h3>
+        <ul>
+            {% for note in notes %}
+            <input class="delete_note btn btn-dark" id="{{note.id}}" type="submit" value="X" name="{{note.subject}}"/>
+            <li class="task-items note-items" id="note-{{note.id}}" value="{{note.id}}" name="{{note.subject}}"> {{note.note}}</li>
+                <div id="edit-note-{{note.id}}">
+
+                </div>
+            {% endfor %}
+        </ul>
+        <br>
+        <br>
+        <button class="add btn btn-dark" value="{{subject.subject}}" name="note"> Add Note </button>
+        
+        <div class="task">
+
+        </div>
+    </div>
+    <form method="POST">
+        <button class="delete_subject btn btn-dark btn-sm"> Delete {{subject.subject}} </button>
+    </form>
+    
+</div>  
+{% endblock %}
+{% block script %}
+    <script src="{% static 'Tasker/script.js' %}"></script>
+{% endblock %}

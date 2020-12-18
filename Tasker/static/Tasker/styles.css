@@ -1,0 +1,148 @@
+
+  .body {
+    margin-left:10%;
+    padding:1px 16px;
+    height:1000px;
+  }
+
+  .title {
+    margin-left: 30%;
+    font-size: x-large;
+    font-family: cursive;
+   
+  }
+  
+  .dashboard {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+    width: 15%;
+    background-color: white;
+    border: 5px;
+    border-color: black;
+    border-style: solid;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+  }
+  
+  li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+  }
+  
+  li a:hover {
+    color: black;
+    background-color: grey;
+    font-weight: bold;
+  }
+
+  .btn:hover {
+      color: white;
+  }
+
+  .form-control {
+      width: 300px;
+  }
+
+  h2 {
+      text-align: center;
+  }
+
+  .logins {
+    margin-left: 350px;
+  }
+
+  .login-button {
+    margin-left: 50px;
+  }
+
+  .task-view {
+    margin-left:0%;
+    padding:5px 16px;
+    width: 400px;
+    border: 1px;
+    border-color: black;
+    border-style: solid;
+  }
+
+  .task-items {
+    border-bottom: 1px solid black;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    font-size: 1.3em;
+    color: black;
+  }
+
+  ul {
+    list-style-type: none;
+  }
+
+  .list-group-item {
+    width: 200px;
+    height: 50px;
+    background-color: lightskyblue;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .add_link {
+    margin-top: 10px;
+  }
+
+  .link {
+    margin-top: 10px;
+  }
+
+  .delete_subject {
+    margin-left: 600px;
+    margin-top: 200px;
+  }
+
+  .delete_note {
+    position: absolute;
+    margin-left: -40px;
+    margin-top: 15px;
+
+  }
+
+  .note-items:hover {
+    background-color: lightyellow;
+    cursor: pointer;
+  }
+
+  #newnote, .save_edit, .note-items {
+    margin-left: 15px;
+  }
+
+  #add_note {
+    margin-top: -30px;
+  }
+
+  .deadline {
+    width: 400px;
+  }
+
+  #time {
+    font-size: x-small;
+  }
+
+  #newtext {
+    margin-top: -30px;
+  }
+
+  .url-view, .subject-name {
+    width: 400px;
+  }
+
+  .url-name-view {
+    position: absolute;
+    width: 400px;
+    margin-top: -156px;
+    margin-left: 430px;
+  }
+
+
+

@@ -1,0 +1,98 @@
+{% extends "Tasker/layout.html"%}
+{% load static %}
+
+
+{% block body %}
+{% if user.is_authenticated %}
+<style>
+    @keyframes move {
+        from {
+            right: -100%;
+        }
+        to {
+            right: 0%;
+        }
+    }
+
+    h3 {
+        position: relative;
+        animation-name: move;
+        animation-duration: 2s;
+        animation-fill-mode: forwards;
+       
+    }
+</style>
+<div class="body">
+    <head>
+        <h2> My Dashboard </h2>
+    </head>
+    <hr>
+    <h3>Welcome, {{request.user}}!</h3>
+    <br>
+    <p id="demo"></p>
+    <script>
+        var d = new Date();
+        document.getElementById("demo").innerHTML = `<h4>Today is ${d.toDateString()}.</h4>`
+    </script>
+    
+    {% if not tasks %}
+
+    {% else %}
+        {% if days_left %}
+        <h5><div class="alert alert-warning deadline" role="alert">You have {{days_left}} day(s) left for <strong>{{task.task}}</strong>!</div></h5>
+        {% else %}
+        <div class="alert alert-danger deadline" role="alert">Today is your deadline for <strong>{{task.task}}</strong>!</div>
+        {% endif %}
+    {% endif %}
+    {% if message %}
+        {{message}}
+    {% endif %}
+    <div class="task-view shadow p-3 mb-5 bg-white rounded">
+        
+        <h3> General Tasks </h3>
+        <ul>
+            {% for task in tasks %}
+                <li class="task-items" id="task-item-{{task.id}}"><input class="checkmark" id="{{task.id}}" name="{{task.checked}}" type="checkbox"> {{task.task}}<p id="time">Deadline: {{task.deadline}}</p></li>
+            {% endfor %}
+        </ul>
+        
+        <button class="add btn btn-dark" id="add_task" name="task"> Add Task </button>
+
+        <div class="task">
+
+        </div>
+    </div>
+    <br>
+    <h3> Jump to Subjects</h3>
+    {% if not subjects %}
+    <h4> You haven't created any subjects. <a href="{% url 'subjects' %}">Click Here</a> to create one.</h4>
+    {% else %}
+    <div class="form-group">
+        <label for="category">Filter by category</label>
+        <select autofocus class="form-control" name="filter" id="filter" placeholder="Category">
+            <option default="true">All</option>
+            {% for cat in category %}
+                <option class="what"> {{cat}} </option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div id="subject-view">
+        <ul class="list-group list-group-horizontal">
+            {% for subject in subjects %}
+            <h4><a href="{% url 'subject' subject.subject %}" class="list-group-item list-group-item-action rounded-pill">{{subject.subject}}</a></h4>
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="filter-view">
+    </div>
+    {% endif %}
+</div>
+{% else %}
+Please log in or register to see your Dashboard
+{% endif %}
+
+{% endblock %}
+{% block script %}
+    <script src="{% static 'Tasker/script.js' %}"></script>
+{% endblock %}
