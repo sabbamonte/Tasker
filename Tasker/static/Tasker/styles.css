@@ -3,7 +3,22 @@
     margin-left:10%;
     padding:1px 16px;
     height:1000px;
+    font-family: 'Lora', serif;
+    background-color: #fce1e0;
+    color: #000000;
   }
+
+  #dashboard {
+    font-family: 'Lora', serif;
+    background-color: #fce1e0;
+    color: #000000;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    text-transform: uppercase;
+   }
 
   .title {
     margin-left: 30%;
