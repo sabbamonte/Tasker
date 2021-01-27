@@ -12,7 +12,7 @@
     <div class="task-view shadow p-3 mb-5 bg-white rounded">
         
         <h3> Completed Tasks </h3>
-        <ul>
+        <ul class="archived-items">
             {% for archive in archived %}
                 <li class="task-items" id="{{archive.id}}"><input class="delete btn btn-dark" id="{{archive.id}}" type="submit" value="X" name="delete_task"/> {{archive.task}} <p id="time">Deadline: {{archive.deadline}}</p></li>
             {% endfor %}

@@ -50,7 +50,7 @@
     <div class="task-view shadow p-3 mb-5 bg-white rounded">
         
         <h3> General Tasks </h3>
-        <ul>
+        <ul id="task-list">
             {% for task in tasks %}
                 <li class="task-items" id="task-item-{{task.id}}"><input class="checkmark" id="{{task.id}}" name="{{task.checked}}" type="checkbox"> {{task.task}}<p id="time">Deadline: {{task.deadline}}</p></li>
             {% endfor %}
