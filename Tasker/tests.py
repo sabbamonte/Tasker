@@ -1,19 +1,16 @@
 from django.test import TestCase
-from datetime import date, datetime
-from time import sleep
 import os
 import unittest
 import pathlib
 
 from selenium import webdriver
-from chromedriver_py import binary_path
 
 # Create your tests here.
 
 def file_uri(filename):
     return pathlib.Path(os.path.abspath(filename)).as_uri()
 
-driver = webdriver.Chrome(executable_path=binary_path)
+driver = webdriver.Chrome()
 
 # Create a Testss
 
@@ -37,4 +34,3 @@ class WebpageTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
