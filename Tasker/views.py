@@ -14,6 +14,7 @@ import datetime
 
 from .models import User, Tasks, Subject, URL, Notes
 
+# Show all tasks, subjects and categories if available
 @login_required(login_url='/login')
 def index(request):
     if request.method == "GET":
@@ -35,11 +36,14 @@ def index(request):
         return render(request, "Tasker/index.html", {"tasks":tasks, "subjects":subjects, "category":category})
 
 
+# Try to log user in
 def login_view(request):
     if request.method == "POST":
 
         username = request.POST["username"]
         password = request.POST["password"]
+
+        # Check if inputs match database
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
@@ -52,11 +56,13 @@ def login_view(request):
     else:
         return render(request, "Tasker/login.html")
 
+# Register new users
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
 
+        # Error check that password matches
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
@@ -64,6 +70,7 @@ def register(request):
                 "message": "Passwords must match."
             })
 
+        # Error check if username already taken
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
@@ -76,10 +83,12 @@ def register(request):
     else:
         return render(request, "Tasker/register.html")
 
+# Log users out
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
+# add API path
 @login_required
 @csrf_exempt
 def add(request):
@@ -89,7 +98,8 @@ def add(request):
     
     if request.method == "POST":
         data = json.loads(request.body.decode("utf-8"))
-        print(data)
+
+        # Check if subject is being added
         if data.get('link') is not None:
             url = URL()
             data = json.loads(request.body.decode("utf-8"))
@@ -99,6 +109,7 @@ def add(request):
             url.save()
             return JsonResponse({"message": "Post updated successfully."}, status=201)
 
+        # Check if note is being added
         if data.get('note') is not None:
             note = Notes()
             data = json.loads(request.body.decode("utf-8"))
@@ -110,6 +121,7 @@ def add(request):
             note.save()
             return JsonResponse({"message": "Post updated successfully."}, status=201)
         
+        # Check if task is being added
         else:
             task = Tasks()
             task.user = request.user
@@ -122,6 +134,7 @@ def add(request):
             task.save()
             return JsonResponse({"message": "Post updated successfully."}, status=201)
 
+# check API path
 @login_required
 @csrf_exempt
 def check(request, task_id):
@@ -130,6 +143,7 @@ def check(request, task_id):
     if request.method == "GET":
         return JsonResponse({"task": list(task)})
 
+    # Change archived status to True
     if request.method == "PUT":
         task = Tasks.objects.get(user=request.user, id=task_id)
         data = json.loads(request.body.decode("utf-8"))
@@ -141,6 +155,8 @@ def check(request, task_id):
 @login_required
 @csrf_exempt
 def archive(request):
+
+    # Show all archived tasks
     if request.method == "GET":
         archived = Tasks.objects.filter(user=request.user, checked=True)
         if not archived:
@@ -148,16 +164,19 @@ def archive(request):
         else:
             return render(request, "Tasker/archive.html", {"archived":archived})
 
+    # Delete all archived tasks
     if request.method == "POST":
         Tasks.objects.filter(checked=True).delete()
         return HttpResponseRedirect(reverse("index"))
 
 @login_required
 @csrf_exempt
+# Delete selected archived tasks
 def delete(request, task_id):
     Tasks.objects.get(user=request.user, id=task_id).delete()
-    return JsonResponse({"message": "Post updated successfully."}, status=201)
+    return JsonResponse({"message": "Task deleted successfully."}, status=201)
 
+# delete_link API Path
 @login_required
 @csrf_exempt
 def delete_link(request, subject, link_id):
@@ -165,20 +184,23 @@ def delete_link(request, subject, link_id):
         url = URL.objects.get(subject=subject, id=link_id).values()
         return JsonResponse({"task": list(url)})
 
+    # Check which to be deleted, URL or note object
     elif request.method == "DELETE":
         try:
             URL.objects.get(subject=subject, id=link_id).delete()
         except ObjectDoesNotExist:
             Notes.objects.get(user=request.user, subject=subject, id=link_id).delete()
-        return JsonResponse({"message": "Post updated successfully."}, status=201)
+        return JsonResponse({"message": "Deleted successfully."}, status=201)
 
 @login_required
 @csrf_exempt
 def subjects(request):
+    # Show all subjects
     if request.method == "GET":
         subjects = Subject.objects.filter(user=request.user)
         return render(request, "Tasker/subjects.html", {'subjects': subjects})
 
+    # Create new subject and error check
     if request.method == "POST":
         new_subject = Subject()
 
@@ -200,12 +222,14 @@ def subjects(request):
 
         new_subject.save()
 
+        # Bulk create the new subjects' URLs
         URL.objects.bulk_create([
         URL(subject=new_subject.subject, links=request.POST['url1'], name=request.POST['name1']),
         URL(subject=new_subject.subject, links=request.POST['url2'], name=request.POST['name2']),
         URL(subject=new_subject.subject, links=request.POST['url3'], name=request.POST['name3']),
         ])
         
+        # Delete links that have been left empty
         URL.objects.filter(links='').delete()
 
         return HttpResponseRedirect(reverse("index"))
@@ -213,17 +237,20 @@ def subjects(request):
 @login_required      
 @csrf_exempt
 def subject(request, subject):
+    # Show selected subject page
     if request.method == "GET":
         subject = Subject.objects.get(user=request.user, subject=subject)
         links = URL.objects.filter(subject=subject.subject)
         notes = Notes.objects.filter(user=request.user, subject=subject.subject)
         return render(request, "Tasker/subject.html", {'subject': subject, 'links':links, 'notes':notes})
     
+    # Delete subject and notes associated with it
     if request.method == "POST":
         Subject.objects.get(user=request.user, subject=subject).delete()
         Notes.objects.filter(user=request.user, subject=subject).delete()
         return HttpResponseRedirect(reverse("index"))
-        
+
+# edit_note API Path
 @login_required
 @csrf_exempt
 def edit_note(request, subject, note_id):
@@ -231,6 +258,7 @@ def edit_note(request, subject, note_id):
         note = Notes.objects.filter(user=request.user, subject=subject, id=note_id).values()
         return JsonResponse({"task": list(note)})
 
+    # Edit new note
     if request.method == "PUT":
         new_note = Notes.objects.get(user=request.user, id=note_id)
         data = json.loads(request.body.decode("utf-8"))
@@ -241,8 +269,10 @@ def edit_note(request, subject, note_id):
         new_note.save()
         return JsonResponse({"message": "Note edited successfully."}, status=201)
 
+# filter API Path
 @login_required
 def filter(request, category):
+    # Show categories selected, if none selected, show all
     if request.method == "GET":
         filters = Subject.objects.filter(category=category.capitalize()).values()
         if category == "All":
