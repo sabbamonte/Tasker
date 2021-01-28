@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Run Selenium unit test
+    - name: Run Selenium unittest
       run: |
         pip3 install --user selenium
         pip3 install --user webdriver-manager
