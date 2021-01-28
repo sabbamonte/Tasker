@@ -9,6 +9,5 @@ jobs:
     - name: Run Selenium unittest
       run: |
         pip3 install --user selenium
-        pip3 install --user webdriver-manager
         pip3 install --user django
         python3 tests.py
