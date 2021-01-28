@@ -6,19 +6,14 @@ import unittest
 import pathlib
 
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 
 # Create your tests here.
 
 def file_uri(filename):
     return pathlib.Path(os.path.abspath(filename)).as_uri()
 
-chrome_options = Options()
-chrome_options.add_argument('--no-sandbox')
-chrome_options.add_argument('--headless')
-chrome_options.add_argument('--disable-dev-shm-usage')
-driver = webdriver.Chrome(executable_path='/usr/local/Caskroom/chromedriver/88.0.4324.96/chromedriver',chrome_options=chrome_options)
-driver.get('https://www.google.com/')
+driver = webdriver.Chrome(ChromeDriverManager().install())
 
 # Create a task
 
